@@ -7,16 +7,17 @@ onMounted(async () => { rows.value = await getJSON('/api/sink') })
 <template>
   <div class="page">
     <h1>Sink</h1>
-    <p class="muted">已成功应用的实体当前态（delete 后行消失）。</p>
+    <p class="muted">已成功应用的实体当前态（delete 后行消失）。schema 版本标注该行最后一次写入所用的字段形状。</p>
     <div class="panel">
       <table>
         <thead>
-          <tr><th>流</th><th>entity_key</th><th>last_seq</th><th>last_event_ts</th><th>payload</th><th>updated</th></tr>
+          <tr><th>流</th><th>entity_key</th><th>schema 版本</th><th>last_seq</th><th>last_event_ts</th><th>payload</th><th>updated</th></tr>
         </thead>
         <tbody>
           <tr v-for="r in rows" :key="r.id">
             <td>{{ r.stream_id }}</td>
             <td>{{ r.entity_key }}</td>
+            <td><span class="tag" :class="r.schema_version > 1 ? 'warn' : 'ok'">v{{ r.schema_version }}</span></td>
             <td>{{ r.last_seq }}</td>
             <td>{{ r.last_event_ts }}</td>
             <td><pre class="mono">{{ JSON.stringify(r.payload) }}</pre></td>

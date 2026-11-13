@@ -33,3 +33,9 @@ export async function putJSON(path, body) {
   if (!r.ok) throw new Error(await r.text())
   return r.json()
 }
+
+export async function deleteJSON(path) {
+  const r = await fetch(path, { method: 'DELETE' })
+  if (!r.ok) throw new Error(await r.text())
+  return r.json()
+}

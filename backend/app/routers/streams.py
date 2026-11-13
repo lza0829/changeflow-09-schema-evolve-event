@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 
 from app.db import connect
 from app.repositories import streams as streams_repo
+from app.modules.schema_evolve_event import MAPPING_FAILURE_POLICIES
 from app.schemas.entities import StreamPatch
 from app.services import apply_service
 
@@ -38,6 +39,12 @@ def patch_stream(stream_id: int, body: StreamPatch):
             raise HTTPException(404, "stream not found")
         if body.enabled is not None:
             streams_repo.set_enabled(conn, stream_id, body.enabled)
+        if body.mapping_failure_policy is not None:
+            if body.mapping_failure_policy not in MAPPING_FAILURE_POLICIES:
+                raise HTTPException(400, "mapping_failure_policy must be quarantine or skip")
+            streams_repo.set_mapping_failure_policy(
+                conn, stream_id, body.mapping_failure_policy
+            )
         conn.commit()
         return streams_repo.get_stream(conn, stream_id)
     finally:

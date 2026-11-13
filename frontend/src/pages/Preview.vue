@@ -33,6 +33,13 @@ onMounted(async () => {
     <p v-if="err" class="tag danger">{{ err }}</p>
     <div class="panel" v-if="preview">
       <p class="muted">共 {{ preview.count }} 条（展示前 50）</p>
+      <p v-if="preview.evolution && preview.evolution.points.length">
+        演化点
+        <span v-for="p in preview.evolution.points" :key="p.seq">
+          seq {{ p.seq }}（v{{ p.from_version }}→v{{ p.to_version }}，{{ p.source }}）
+        </span>
+        · 最终 v{{ preview.evolution.final_version }}
+      </p>
       <table>
         <thead><tr><th>seq</th><th>op</th><th>entity_key</th><th>event_ts</th><th>payload</th></tr></thead>
         <tbody>

@@ -1,0 +1,8 @@
+{"seq":1,"op":"upsert","entity_key":"ORD-5001","event_ts":"2026-11-02T08:00:00Z","payload":{"order_status":"created","total_amount":210.0,"sku":"SKU-A"}}
+{"seq":2,"op":"upsert","entity_key":"ORD-5002","event_ts":"2026-11-02T08:05:00Z","payload":{"order_status":"paid","total_amount":75.25,"sku":"SKU-B"}}
+{"seq":3,"op":"upsert","entity_key":"ORD-5003","event_ts":"2026-11-02T08:06:00Z","payload":{"order_status":"created","total_amount":18.0,"sku":"SKU-C"}}
+{"seq":4,"op":"evolve","entity_key":"__schema__","event_ts":"2026-11-02T08:10:00Z","schema_version":2,"from_version":1,"payload":{"note":"order v2：order_status→status，total_amount→amount；在途旧形状事件由映射规范化"}}
+{"seq":5,"op":"upsert","entity_key":"ORD-5001","event_ts":"2026-11-02T08:15:00Z","payload":{"order_status":"shipped","total_amount":210.0,"sku":"SKU-A"}}
+{"seq":6,"op":"upsert","entity_key":"ORD-5004","event_ts":"2026-11-02T08:20:00Z","payload":{"status":"created","amount":33.5,"sku":"SKU-D"}}
+{"seq":7,"op":"upsert","entity_key":"ORD-5005","event_ts":"2026-11-02T08:25:00Z","payload":{"status":"created","sku":"SKU-E"}}
+{"seq":8,"op":"delete","entity_key":"ORD-5002","event_ts":"2026-11-02T08:30:00Z","payload":{}}

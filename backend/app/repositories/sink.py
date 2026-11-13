@@ -18,16 +18,20 @@ def upsert(
     payload: dict[str, Any],
     seq: int,
     event_ts: str,
+    schema_version: int = 1,
 ) -> None:
     conn.execute(
         """
-        INSERT INTO sink_records(stream_id, entity_key, payload_json, last_seq, last_event_ts, updated_at)
-        VALUES (?,?,?,?,?,?)
+        INSERT INTO sink_records(
+            stream_id, entity_key, payload_json, last_seq, last_event_ts, updated_at, schema_version
+        )
+        VALUES (?,?,?,?,?,?,?)
         ON CONFLICT(stream_id, entity_key) DO UPDATE SET
             payload_json=excluded.payload_json,
             last_seq=excluded.last_seq,
             last_event_ts=excluded.last_event_ts,
-            updated_at=excluded.updated_at
+            updated_at=excluded.updated_at,
+            schema_version=excluded.schema_version
         """,
         (
             stream_id,
@@ -36,6 +40,7 @@ def upsert(
             seq,
             event_ts,
             _now(),
+            int(schema_version),
         ),
     )
 
@@ -50,7 +55,7 @@ def delete(conn: sqlite3.Connection, *, stream_id: int, entity_key: str) -> None
 def list_sink(conn: sqlite3.Connection) -> list[dict[str, Any]]:
     rows = conn.execute(
         """
-        SELECT id, stream_id, entity_key, payload_json, last_seq, last_event_ts, updated_at
+        SELECT id, stream_id, entity_key, payload_json, last_seq, last_event_ts, updated_at, schema_version
         FROM sink_records ORDER BY stream_id, entity_key
         """
     ).fetchall()
